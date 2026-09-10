@@ -11,8 +11,7 @@
         "path": "./plugins/stt2study-note-pdf"
       },
       "policy": {
-        "installation": "AVAILABLE",
-        "authentication": "ON_INSTALL"
+        "installation": "AVAILABLE"
       },
       "category": "Productivity"
     }
