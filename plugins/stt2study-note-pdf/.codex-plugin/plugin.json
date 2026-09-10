@@ -1,0 +1,20 @@
+{
+  "name": "stt2study-note-pdf",
+  "version": "0.1.0+openai.b866bbfb99d1",
+  "description": "강의 녹취록(STT)과 교재 PDF로 다이어그램 중심 학습 노트 PDF를 만든다.",
+  "author": {
+    "name": "naria"
+  },
+  "skills": "./skills/",
+  "interface": {
+    "displayName": "STT to Study Note PDF",
+    "shortDescription": "STT와 교재 PDF로 학습 노트를 만듭니다.",
+    "longDescription": "강의 녹취록(STT)과 교재 PDF로 다이어그램 중심 학습 노트 PDF를 만든다.",
+    "developerName": "naria",
+    "category": "Productivity",
+    "capabilities": [],
+    "defaultPrompt": [
+      "강의 녹취록과 교재 PDF를 바탕으로 학습 노트를 만들어줘."
+    ]
+  }
+}
