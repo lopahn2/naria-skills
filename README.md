@@ -67,11 +67,29 @@ naria-skills/
 (아직 TODO거나 애초에 그 스킬이 멀티벤더를 지원하지 않으면) 그 스킬의
 `README.md`를 참고해 직접 방법을 채운다.
 
+## 버전 동기화
+
+같은 스킬을 벤더별로 3곳(`vendors/claude`, `vendors/openai`, `plugins/`)에 각자
+`plugin.json`으로 패키징하다 보니, 사람이 손으로 올리거나 Codex 자동화가 자기
+쪽만 올리면 버전이 서로 어긋난다. `tools/sync_plugin_version.py`가 세 파일의
+버전 중 가장 높은 것으로 나머지를 맞춘다.
+
+```bash
+python3 tools/sync_plugin_version.py          # 동기화 실행
+python3 tools/sync_plugin_version.py --check  # 실행 없이 어긋남만 확인 (exit 1)
+```
+
+`.github/workflows/sync-plugin-version.yml`이 `plugin.json`이 바뀐 채로 main에
+push될 때마다 이걸 자동으로 돌리고, 바뀐 게 있으면 다시 커밋한다 — 그래서
+어느 벤더가 버전을 올리든 나머지도 곧 따라간다. 로컬에서 직접 버전을 올릴 땐
+아무 `plugin.json` 하나만 고치고 push하면 나머지는 CI가 맞춰준다.
+
 ## ChatGPT Work / Codex에서 쓰기
 
 ChatGPT Work/Codex는 `.agents/plugins/marketplace.json`을 마켓플레이스 매니페스트로 읽는다.
-`plugins/stt2study-note-pdf`는 `skills/stt2study-note-pdf/vendors/openai`를 가리키는 심볼릭 링크이며,
-실제 플러그인 매니페스트는 그 안의 `.codex-plugin/plugin.json`에 있다.
+`plugins/stt2study-note-pdf`는 `skills/stt2study-note-pdf/vendors/openai`의 파일을 그대로 복사한
+Codex 전용 패키징이다 (Codex가 심볼릭 링크를 못 읽어서 심볼릭 링크 없이 따로 둔다). 실제 플러그인
+매니페스트는 그 안의 `.codex-plugin/plugin.json`에 있다.
 
 로컬에서 이 레포를 마켓플레이스로 추가할 때는 레포 루트를 대상으로 한다.
 

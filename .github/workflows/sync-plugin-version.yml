@@ -1,0 +1,44 @@
+name: Sync plugin.json versions
+
+# 벤더별 plugin.json(Claude / Codex 심볼릭 링크판 / Codex 플랫 복사판)의 버전이
+# 서로 다른 주체(사람, Claude Code, Codex 자동화)에 의해 따로 올라가면서
+# 어긋나는 걸 막기 위한 워크플로우. main에 plugin.json이 바뀐 push가 오면
+# 가장 높은 버전으로 나머지를 맞추고, 바뀐 게 있으면 다시 커밋한다.
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - "**/plugin.json"
+      - "tools/sync_plugin_version.py"
+  workflow_dispatch: {}
+
+permissions:
+  contents: write
+
+jobs:
+  sync:
+    # 이 워크플로우 자신이 만든 커밋이 다시 push를 트리거해서 무한 루프가
+    # 되는 걸 막는다.
+    if: github.actor != 'github-actions[bot]'
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Run version sync
+        id: sync
+        run: |
+          set +e
+          python3 tools/sync_plugin_version.py
+          echo "exit_code=$?" >> "$GITHUB_OUTPUT"
+
+      - name: Commit and push if changed
+        if: steps.sync.outputs.exit_code == '1'
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git add -- '**/plugin.json'
+          git commit -m "chore: sync plugin.json versions [skip ci]"
+          git push
