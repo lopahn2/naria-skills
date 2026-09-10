@@ -93,17 +93,19 @@ codex plugin list
 
 ```text
 plugins/<plugin-name>/
-├── marketplace.json
+├── .claude-plugin/
+│   └── plugin.json
 └── skills/
     └── <skill-name>/
         ├── SKILL.md
         └── ... 나머지 파일
 ```
 
-- 현재 `plugin-name`, `skill-name`, `SKILL.md` frontmatter의 `name`은 동일하게 관리한다.
-- `plugins/<plugin-name>/marketplace.json`은 OpenAI 생성용 표시 정보이며 Claude가 읽지 않는다.
-- 새 Claude 플러그인은 `.claude-plugin/marketplace.json`의 `plugins` 배열에도 추가한다.
-- main에 push하면 `plugins/*/skills/*/SKILL.md`를 탐색해 `openai-marketplace`를 갱신한다.
+- 현재 `plugin-name`, `skill-name`, `SKILL.md` frontmatter의 `name`,
+  `.claude-plugin/plugin.json`의 `name`은 동일하게 관리한다.
+- 새 Claude 플러그인은 루트 `.claude-plugin/marketplace.json`의 `plugins` 배열에도 추가한다.
+- main에 push하면 `plugins/*/.claude-plugin/plugin.json`과
+  `plugins/*/skills/*/SKILL.md`를 검증해 `openai-marketplace`를 갱신한다.
 
 ## 원본 수정 규칙
 

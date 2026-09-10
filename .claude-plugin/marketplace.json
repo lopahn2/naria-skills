@@ -3,21 +3,11 @@
   "owner": {
     "name": "naria"
   },
-  "description": "naria가 만든 AI 에이전트 스킬 모음",
   "plugins": [
     {
       "name": "stt2study-note-pdf",
-      "displayName": "STT to Study Note PDF",
-      "description": "강의 녹취록(STT)과 교재 PDF로 다이어그램 중심 학습 노트 PDF 생성",
-      "keywords": [
-        "lecture",
-        "transcript",
-        "pdf",
-        "korean",
-        "study-notes"
-      ],
       "source": "./plugins/stt2study-note-pdf",
-      "skills": "./skills"
+      "description": "강의 녹취록(STT)과 교재 PDF로 다이어그램 중심 학습 노트 PDF를 만든다."
     }
   ]
 }
