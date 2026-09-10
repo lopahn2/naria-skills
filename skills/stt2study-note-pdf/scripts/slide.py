@@ -7,9 +7,12 @@
 원본이 이미 도해면 다시 그리지 말고 이걸로 가져다 쓴다.
 표현하는 축이 2개 이상인 그림을 다시 그리면 반드시 축을 잃는다.
 
---view 로 먼저 보고, 제목을 뺀 도해 영역만 crop 좌표로 지정할 것
-(보통 상단 25% 제외). 결과는 b64.json 에 누적되며 본문에서
-{{key}} 플레이스홀더로 참조한다.
+**기본은 crop 인자 없이 페이지 전체를 그대로 쓰는 것이다** (여백만 자동 제거).
+crop 좌표는 한 페이지에 무관한 도해가 여럿 섞여 반드시 분리해야 할 때만 쓴다 —
+눈대중 좌표가 어긋나면 최종본에서 그림이 잘리거나 깨지는 사고로 이어진다.
+crop을 쓸 때는 --view 로 먼저 픽셀 크기를 확인하고, 결과를 verify.py 컨택트
+시트로 반드시 다시 육안 확인할 것. 자세한 사유는
+references/diagram-rules.md 참고.
 
 pdf 경로가 `dayNN/slides/...` 형태면 크롭 좌표를 `dayNN/diagrams.json` 에도
 같이 기록한다 — 나중에 노트(②)와 원본 교재(③)만 가지고 똑같은 도해를 다시
@@ -71,6 +74,12 @@ crop = None
 for a in sys.argv[4:]:
     if ',' in a:
         crop = tuple(int(x) for x in a.split(','))
+
+if crop:
+    print('주의: crop 좌표 지정됨 — 눈대중 좌표가 어긋나면 그림이 잘리거나 깨질 '
+          '수 있다. 무관한 도해가 섞여 분리해야 하는 경우가 아니라면 crop 없이 '
+          '페이지 전체를 쓰는 것을 권장한다 (references/diagram-rules.md 참고). '
+          'crop 결과는 verify.py 컨택트 시트로 반드시 재확인할 것.', file=sys.stderr)
 
 im = Image.open(src).convert('RGB')
 if crop:

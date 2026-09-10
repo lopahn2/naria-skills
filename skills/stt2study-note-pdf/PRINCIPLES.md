@@ -164,10 +164,15 @@ Phase A가 스스로 정확한 페이지를 다시 찾아낸 사례가 실제로
 
 ```bash
 python3 scripts/slide.py 교재.pdf 51 --view                    # 먼저 확인
-python3 scripts/slide.py 교재.pdf 51 S51 290,290,1400,810      # 도해 추출
+python3 scripts/slide.py 교재.pdf 51 S51                       # 도해 추출 — 기본은 crop 없이 페이지 전체
 python3 scripts/build.py out/dayNN.pdf part1.html part2.html part3.html
 python3 scripts/verify.py out/dayNN.pdf
 ```
+
+크롭 좌표(`290,290,1400,810`처럼 뒤에 붙이는 인자)는 한 페이지에 무관한 도해가
+여럿 섞여 분리해야만 할 때만 예외적으로 쓴다. 눈대중 좌표가 어긋나면 최종본에서
+그림이 깨지거나 잘리는 사고로 이어진다 — 자세한 사유와 절차는
+`references/diagram-rules.md`의 "크롭 대신 전체 장표를 그대로 가져온다" 참조.
 
 `verify.py`가 만든 컨택트 시트를 **반드시 육안 확인한다.** 한글 깨짐·누락 / SVG 요소
 겹침 / 표가 페이지를 가로지름 / 빈 페이지 / 도해 캡션과 실제 그림 불일치.
