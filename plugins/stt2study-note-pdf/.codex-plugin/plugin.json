@@ -1,20 +1,20 @@
 {
   "name": "stt2study-note-pdf",
-  "version": "0.1.0+openai.8f000338dbb9",
+  "version": "0.1.0+openai.cac4fccae1fb",
   "description": "강의 녹취록(STT)과 교재 PDF로 다이어그램 중심 학습 노트 PDF를 만든다. 교시별 분석을 서브에이전트에 위임하고 통합본은 메인이 작성한다. 인코딩·OCR·교본 매칭·STT 교정 자동 처리. 강의 정리, 교육 노트, 세미나·컨퍼런스 녹취 정리 요청에 사용.",
   "author": {
     "name": "naria"
   },
   "skills": "./skills/",
   "interface": {
-    "displayName": "STT to Study Note PDF",
-    "shortDescription": "STT와 교재 PDF로 학습 노트를 만듭니다.",
+    "displayName": "stt2study-note-pdf",
+    "shortDescription": "강의 녹취록(STT)과 교재 PDF로 다이어그램 중심 학습 노트 PDF를 만든다. 교시별 분석을 서브에이전트에 위임하고 통합본은 메인이 작성한다. 인코딩·OCR·교본 매칭·STT 교정 자동 처리. 강의 정리, 교육 노트, 세미나·컨퍼런스 녹취 정리 요청에 사용.",
     "longDescription": "강의 녹취록(STT)과 교재 PDF로 다이어그램 중심 학습 노트 PDF를 만든다. 교시별 분석을 서브에이전트에 위임하고 통합본은 메인이 작성한다. 인코딩·OCR·교본 매칭·STT 교정 자동 처리. 강의 정리, 교육 노트, 세미나·컨퍼런스 녹취 정리 요청에 사용.",
     "developerName": "naria",
     "category": "Productivity",
     "capabilities": [],
     "defaultPrompt": [
-      "강의 녹취록과 교재 PDF를 바탕으로 학습 노트를 만들어줘."
+      "stt2study-note-pdf 스킬을 사용해줘."
     ]
   }
 }
