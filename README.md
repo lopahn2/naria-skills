@@ -1,8 +1,11 @@
 # naria-skills
 
-naria가 만든 AI 에이전트 스킬 모음. 벤더 중립을 목표로 한다 — 각 스킬은
-공통 방법론을 벤더 무관 문서로 두고, 도구별 실행 방식(서브에이전트 호출 문법,
-플러그인 형식 등)만 `vendors/`로 나눈다.
+naria가 만든 AI 에이전트 스킬 모음. 각 스킬은 `SKILL.md` 원본이 **하나뿐**이다 —
+Claude Code용/Codex용으로 내용이 갈라진 별도 파일을 두지 않는다. 벤더마다 다르게
+호출해야 하는 부분(서브에이전트 모델 지정 등)은 그 `SKILL.md` 안에서 "지금 어떤
+환경인지 판별해 분기를 따르라"고 지시하고, 판단이 애매하면 사용자에게 먼저
+확인받도록 명시한다. 마켓플레이스에 올라가는 패키징(Claude/Codex)은 이 원본을
+감싸는 얇은 껍데기일 뿐, 별도의 콘텐츠 사본이 아니다.
 
 ## 스킬 목록
 
@@ -20,32 +23,42 @@ naria-skills/
 │   └── marketplace.json          Claude Code/Cowork용 마켓플레이스 매니페스트
 ├── .agents/plugins/
 │   └── marketplace.json          ChatGPT Work/Codex용 마켓플레이스 매니페스트
-├── plugins/
-│   └── stt2study-note-pdf -> skills/stt2study-note-pdf/vendors/openai
-│                                  Codex 마켓플레이스가 참조하는 OpenAI 플러그인 진입점
-└── skills/
-    └── <스킬 이름>/
-        ├── README.md              그 스킬의 개요 + 벤더별 안내
-        ├── PRINCIPLES.md          벤더 중립 원칙 (모든 스킬이 이 패턴을 따르진 않아도 됨 —
-        │                          여러 벤더를 지원하는 스킬만 이렇게 나눈다)
-        ├── scripts/, references/, assets/   벤더 무관 자산 (해당하면)
-        └── vendors/
-            ├── claude/            Claude Code 플러그인 형식
-            ├── openai/            GPT 계열용 (해당하면)
-            └── generic/           서브에이전트 미지원 도구용 (해당하면)
+├── tools/
+│   ├── sync_plugin_version.py    벤더별 plugin.json 버전을 하나로 맞춤
+│   └── build_codex_package.py    Codex 패키징을 스킬 원본과 다시 맞춤 (심볼릭 링크 대체)
+├── skills/
+│   └── <스킬 이름>/               스킬의 유일한 원본 — 이 안의 내용만 고친다
+│       ├── README.md
+│       ├── SKILL.md               실행 지침 (벤더 분기 포함)
+│       ├── PRINCIPLES.md          방법론 (벤더 무관)
+│       ├── scripts/, references/, assets/
+│       └── generic-usage.md       서브에이전트 없는 도구용 (마켓플레이스 패키징 아님, 해당하면)
+└── marketplace/                  마켓플레이스가 실제로 읽는 패키징 — 전부 빌드 산출물이거나
+    │                              심볼릭 링크. 여기는 직접 편집하지 않는다.
+    ├── claude/<스킬 이름>/
+    │   ├── .claude-plugin/plugin.json
+    │   ├── agents/*.md            Claude Code 고유 서브에이전트 정의 (여긴 실체)
+    │   └── skills/<스킬 이름>/     스킬 원본을 가리키는 심볼릭 링크
+    └── codex/<스킬 이름>/
+        ├── .codex-plugin/plugin.json
+        └── skills/<스킬 이름>/     스킬 원본의 복사본 (심볼릭 링크 불가라 빌드 산출물)
 ```
 
-모든 스킬이 `vendors/` 구조를 가질 필요는 없다 — 멀티벤더 지원이 실제로 의미 있는
-스킬만 이렇게 나누고, 단순한 스킬은 스킬 폴더 안에 `SKILL.md` 하나로 끝내도 된다.
+모든 스킬이 `marketplace/` 패키징을 가질 필요는 없다 — 마켓플레이스에 올릴 필요가
+없는 단순한 스킬은 `skills/<이름>/SKILL.md` 하나로 끝내도 된다.
 
-## 벤더 간 규칙
+## 원본과 패키징을 분리하는 이유
 
-**각 모델/도구는 자기 `vendors/<자신>/` 폴더만 고친다. 다른 벤더의 `vendors/<다른 벤더>/`는
-읽어서 참고할 순 있어도 내용을 고치지 않는다.** 예를 들어 GPT 계열 모델이
-`vendors/openai/`의 TODO를 채울 때 `vendors/claude/`나 `vendors/generic/`은 건드리지
-않는다. 공통 방법론(`PRINCIPLES.md`, `scripts/`, `references/`, `assets/`)을 고쳐야 하면
-그건 벤더 전용이 아니므로 고쳐도 되지만, 그 변경이 다른 벤더의 실행 방식과 어긋나지
-않는지는 신경 써야 한다 — 애매하면 사용자에게 먼저 확인한다.
+**`skills/<이름>/`만 사람이 고치는 원본이다.** `marketplace/` 아래는 전부 그 원본을
+노출하는 방식일 뿐이다 — Claude는 심볼릭 링크로(고치면 자동 반영), Codex는
+심볼릭 링크를 못 읽어서 빌드 시 파일로 복사한다(`tools/build_codex_package.py`,
+CI가 자동 실행). 예전에는 벤더마다 `SKILL.md`를 손으로 따로 관리했는데, 그 결과
+같은 규칙이 벤더마다 다르게 적히거나 한쪽만 갱신되는 문제가 반복됐다 — 지금은
+원본이 하나뿐이라 그 문제 자체가 없어졌다.
+
+새 벤더를 추가할 때도 `skills/<이름>/SKILL.md` 안에 그 벤더의 분기를 추가하고,
+`marketplace/<벤더>/<이름>/`에 그 벤더 형식의 `plugin.json`만 새로 만들면 된다 —
+스킬 내용을 다시 쓰지 않는다.
 
 ## Claude Code / Cowork에서 쓰기
 
@@ -61,35 +74,13 @@ naria-skills/
 마켓플레이스 매니페스트 스펙은 계속 바뀔 수 있으므로, 처음 푸시한 뒤
 로컬에서 `/plugin marketplace add ./` 로 한 번 검증해볼 것을 권한다.)
 
-## 다른 도구에서 쓰기
-
-스킬마다 `vendors/` 아래에 해당 도구용 폴더가 있으면 그걸 읽는다. 없으면
-(아직 TODO거나 애초에 그 스킬이 멀티벤더를 지원하지 않으면) 그 스킬의
-`README.md`를 참고해 직접 방법을 채운다.
-
-## 버전 동기화
-
-같은 스킬을 벤더별로 3곳(`vendors/claude`, `vendors/openai`, `plugins/`)에 각자
-`plugin.json`으로 패키징하다 보니, 사람이 손으로 올리거나 Codex 자동화가 자기
-쪽만 올리면 버전이 서로 어긋난다. `tools/sync_plugin_version.py`가 세 파일의
-버전 중 가장 높은 것으로 나머지를 맞춘다.
-
-```bash
-python3 tools/sync_plugin_version.py          # 동기화 실행
-python3 tools/sync_plugin_version.py --check  # 실행 없이 어긋남만 확인 (exit 1)
-```
-
-`.github/workflows/sync-plugin-version.yml`이 `plugin.json`이 바뀐 채로 main에
-push될 때마다 이걸 자동으로 돌리고, 바뀐 게 있으면 다시 커밋한다 — 그래서
-어느 벤더가 버전을 올리든 나머지도 곧 따라간다. 로컬에서 직접 버전을 올릴 땐
-아무 `plugin.json` 하나만 고치고 push하면 나머지는 CI가 맞춰준다.
-
 ## ChatGPT Work / Codex에서 쓰기
 
-ChatGPT Work/Codex는 `.agents/plugins/marketplace.json`을 마켓플레이스 매니페스트로 읽는다.
-`plugins/stt2study-note-pdf`는 `skills/stt2study-note-pdf/vendors/openai`의 파일을 그대로 복사한
-Codex 전용 패키징이다 (Codex가 심볼릭 링크를 못 읽어서 심볼릭 링크 없이 따로 둔다). 실제 플러그인
-매니페스트는 그 안의 `.codex-plugin/plugin.json`에 있다.
+ChatGPT Work/Codex는 `.agents/plugins/marketplace.json`을 마켓플레이스 매니페스트로
+읽는다. `marketplace/codex/stt2study-note-pdf/`가 Codex가 실제로 설치하는 패키징이며,
+`skills/stt2study-note-pdf/`(원본)를 그대로 복사한 것이다(Codex가 심볼릭 링크를 못
+읽어서 심볼릭 링크 없이 파일로 둔다). 실제 플러그인 매니페스트는 그 안의
+`.codex-plugin/plugin.json`에 있다.
 
 로컬에서 이 레포를 마켓플레이스로 추가할 때는 레포 루트를 대상으로 한다.
 
@@ -97,8 +88,33 @@ Codex 전용 패키징이다 (Codex가 심볼릭 링크를 못 읽어서 심볼�
 codex plugin marketplace add .
 ```
 
-GitHub에서 설치할 때의 정확한 URL 문법은 사용하는 Codex 클라이언트의 Marketplace 추가 화면이나
-현재 버전의 안내를 따른다. 설치 뒤에는 `stt2study-note-pdf` 플러그인을 선택하면 된다.
+GitHub에서 설치할 때의 정확한 URL 문법은 사용하는 Codex 클라이언트의 Marketplace
+추가 화면이나 현재 버전의 안내를 따른다. 설치 뒤에는 `stt2study-note-pdf` 플러그인을
+선택하면 된다.
+
+## 다른 도구에서 쓰기
+
+`marketplace/`에 해당 벤더 패키징이 없으면(마켓플레이스에 올릴 필요가 없는
+도구라면), 그 스킬의 `generic-usage.md`(있으면) 또는 `README.md`를 참고해 직접
+방법을 채운다. `SKILL.md`·`PRINCIPLES.md`·`scripts/`·`references/`·`assets/`는
+어떤 도구를 쓰든 그대로 쓸 수 있다 — 벤더 전용이 아니다.
+
+## 패키징 동기화
+
+원본(`skills/**`)을 고치면 Codex 패키징(`marketplace/codex/`)과 각 `plugin.json`
+버전이 자동으로 따라오게 만들어져 있다.
+
+```bash
+python3 tools/build_codex_package.py          # skills/ -> marketplace/codex/ 복사 동기화
+python3 tools/sync_plugin_version.py          # 벤더별 plugin.json 버전 통일
+python3 tools/build_codex_package.py --check  # 실행 없이 어긋남만 확인 (exit 1)
+python3 tools/sync_plugin_version.py --check  # 위와 동일, 버전용
+```
+
+`.github/workflows/sync-plugin-version.yml`이 `skills/**` 또는 `plugin.json`이 바뀐
+채로 main에 push될 때마다 이 두 스크립트를 자동으로 돌리고, 바뀐 게 있으면 다시
+커밋한다 — 사람이 원본만 고쳐서 push하면 `marketplace/codex/`와 버전은 CI가 맞춘다.
+`marketplace/claude/`는 심볼릭 링크라 애초에 어긋날 일이 없다.
 
 ## 라이선스
 

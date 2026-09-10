@@ -24,24 +24,23 @@ dayNN/
 **[`PRINCIPLES.md`](PRINCIPLES.md)** — 4대 원칙, 아키텍처, Phase 0~D의 판단 기준
 (등급, 매칭 임계값, 분량 기준, 사용자에게 확인할 것)이 전부 여기 있다. 벤더 무관.
 
-## 사용 중인 도구에 맞는 폴더
+## SKILL.md 하나, 벤더는 패키징만 다르다
 
-| 도구 | 폴더 |
+이 스킬은 **`SKILL.md` 원본이 하나뿐이다.** Claude Code용/Codex용 지침이 서로
+다른 파일로 따로 존재하지 않는다 — `SKILL.md` 안에서 "지금 어떤 환경인지"를
+판별해 그 분기를 따르도록 지시돼 있다 (모델 지정처럼 벤더별로 다른 값이 필요한
+부분만 분기, 나머지는 공통).
+
+| 마켓플레이스 | 패키징 위치 |
 |---|---|
-| Claude (Claude Code / Cowork) | [`vendors/claude/`](vendors/claude/) — 플러그인으로 설치, Task 서브에이전트 병렬 위임 |
-| GPT 계열 (Codex 등, 서브에이전트 위임 가능) | [`vendors/openai/`](vendors/openai/) — 아직 TODO, 해당 모델이 채움 |
-| 서브에이전트를 지원하지 않는 도구 | [`vendors/generic/PROMPT.md`](vendors/generic/PROMPT.md) — 한 세션이 순차로 수행 |
+| Claude Code / Cowork | [`../../marketplace/claude/stt2study-note-pdf/`](../../marketplace/claude/stt2study-note-pdf/) — 이 스킬 원본을 심볼릭 링크로 참조, `agents/*.md`(Task 서브에이전트 정의)만 실체로 존재 |
+| Codex / ChatGPT Work | [`../../marketplace/codex/stt2study-note-pdf/`](../../marketplace/codex/stt2study-note-pdf/) — 심볼릭 링크 불가라 빌드 시 원본을 그대로 복사(`tools/build_codex_package.py`, CI 자동 실행). **여기는 손으로 고치지 않는다** |
+| 서브에이전트를 지원하지 않는 도구 | [`generic-usage.md`](generic-usage.md) — 마켓플레이스에 올리지 않는 순수 참고 문서, 한 세션이 순차로 수행 |
 
-**자기 벤더 폴더만 고친다.** 위 표에서 자기 줄에 해당하는 `vendors/` 폴더만 수정하고,
-다른 벤더의 폴더(예: Claude가 `vendors/openai/`나 `vendors/generic/`)는 참고는 하되
-고치지 않는다. `PRINCIPLES.md`/`scripts/`/`references/`/`assets/`는 벤더 공통이라
-고쳐도 되지만, 다른 벤더의 실행 방식과 어긋나지 않는지 확인하고 애매하면 사용자에게
-먼저 물어본다.
-
-`scripts/`, `references/`, `assets/`는 벤더 무관 — 어떤 도구를 쓰든 이 폴더의
-스크립트와 참고문서를 그대로 쓴다. `vendors/claude/`의 `scripts/`, `references/`,
-`assets/`, `PRINCIPLES.md`는 이 폴더들을 가리키는 심볼릭 링크다(내용을 고칠 땐
-여기, 스킬 루트를 수정할 것).
+**내용을 고칠 땐 항상 이 스킬 원본(`SKILL.md`, `PRINCIPLES.md`, `scripts/`,
+`references/`, `assets/`)만 고친다.** `marketplace/claude/`는 심볼릭 링크라
+원본을 고치면 자동으로 따라오고, `marketplace/codex/`는 CI가 push마다 원본과
+다시 맞춘다 — 두 곳 다 직접 편집 대상이 아니다.
 
 ## 자동으로 처리되는 것
 
@@ -94,14 +93,13 @@ stt2study-note-pdf/
 ├── assets/
 │   ├── template.css              A4 인쇄 CSS (한글)
 │   └── pipeline-diagram.html     전체 아키텍처 다이어그램
-└── vendors/
-    ├── claude/                   Claude Code 플러그인 형식
-    │   ├── .claude-plugin/plugin.json
-    │   ├── agents/lecture-chapter-analyst.md, lecture-part-writer.md
-    │   └── skills/stt2study-note-pdf/SKILL.md (+ scripts·references·assets·PRINCIPLES.md 심볼릭 링크)
-    ├── openai/                   TODO — GPT 계열 모델이 채움
-    └── generic/PROMPT.md         서브에이전트 없는 도구용 순차 실행판
+├── SKILL.md                      실행 지침 — Claude/Codex 분기 포함한 유일한 원본
+└── generic-usage.md              서브에이전트 없는 도구용 순차 실행판 (마켓플레이스 패키징 아님)
 ```
+
+마켓플레이스 패키징(`marketplace/claude/stt2study-note-pdf/`,
+`marketplace/codex/stt2study-note-pdf/`)은 이 폴더 밖, 레포 루트의 `marketplace/`
+아래에 있다 — 구조는 루트 [`README.md`](../../README.md) 참조.
 
 `references/stt-corrections.md`는 회차가 쌓일수록 누적된다. 새 변이형을 발견하면
 그 파일에 추가한다.

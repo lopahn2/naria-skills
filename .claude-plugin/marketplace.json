@@ -6,7 +6,7 @@
   "plugins": [
     {
       "name": "stt2study-note-pdf",
-      "source": "./skills/stt2study-note-pdf/vendors/claude",
+      "source": "./marketplace/claude/stt2study-note-pdf",
       "description": "강의 녹취록(STT)과 교재 PDF로 다이어그램 중심 학습 노트 PDF를 만든다. 교시별 분석과 파트별 통합 작성을 서브에이전트(Sonnet)에 위임하고, 메인은 주제 기반 목차 재설계·연결 설계·조립·검증을 맡는다."
     }
   ]

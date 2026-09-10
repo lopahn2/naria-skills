@@ -8,7 +8,7 @@
       "name": "stt2study-note-pdf",
       "source": {
         "source": "local",
-        "path": "./plugins/stt2study-note-pdf"
+        "path": "./marketplace/codex/stt2study-note-pdf"
       },
       "policy": {
         "installation": "AVAILABLE"

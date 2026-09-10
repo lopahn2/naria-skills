@@ -32,9 +32,8 @@ REPO_ROOT = Path(__file__).resolve().parent.parent
 
 # 동기화 대상 plugin.json 목록. 벤더가 늘어나면 여기에 경로만 추가하면 된다.
 PLUGIN_JSON_PATHS = [
-    REPO_ROOT / "skills/stt2study-note-pdf/vendors/claude/.claude-plugin/plugin.json",
-    REPO_ROOT / "skills/stt2study-note-pdf/vendors/openai/.codex-plugin/plugin.json",
-    REPO_ROOT / "plugins/stt2study-note-pdf/.codex-plugin/plugin.json",
+    REPO_ROOT / "marketplace/claude/stt2study-note-pdf/.claude-plugin/plugin.json",
+    REPO_ROOT / "marketplace/codex/stt2study-note-pdf/.codex-plugin/plugin.json",
 ]
 
 SEMVER_RE = re.compile(r"^(\d+)\.(\d+)\.(\d+)")
