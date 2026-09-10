@@ -11,6 +11,7 @@ CATEGORY, DEVELOPER = "Productivity", "naria"
 @dataclass(frozen=True)
 class Plugin:
     name: str
+    version: str
     description: str
     skill: Path
 
@@ -32,10 +33,13 @@ def discover(root: Path) -> list[Plugin]:
             raise ValueError(f"Missing Claude plugin manifest: {manifest_path}") from error
         if not isinstance(manifest, dict) or manifest.get("name") != plugin_root.name:
             raise ValueError(f"{manifest_path} name must match {plugin_root.name}")
+        version = manifest.get("version")
         description = manifest.get("description")
+        if not isinstance(version, str) or not version.isdecimal() or int(version) < 1:
+            raise ValueError(f"{manifest_path} version must be a positive integer string")
         if not isinstance(description, str) or not description.strip():
             raise ValueError(f"{manifest_path} must define a non-empty description")
-        plugins.append(Plugin(plugin_root.name, description, skill))
+        plugins.append(Plugin(plugin_root.name, version, description, skill))
     if not plugins:
         raise ValueError("No plugins found under plugins/")
     return plugins
@@ -75,7 +79,7 @@ def build(output: Path, plugins: list[Plugin], sha: str) -> None:
     })
     for plugin in plugins:
         target = output / "plugins" / plugin.name
-        write_json(target / ".codex-plugin/plugin.json", openai_manifest(plugin, f"0.1.0+openai.{sha[:12]}"))
+        write_json(target / ".codex-plugin/plugin.json", openai_manifest(plugin, plugin.version))
         shutil.copytree(plugin.skill, target / "skills" / plugin.name, copy_function=shutil.copy2)
 
 def main() -> None:

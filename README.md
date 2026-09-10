@@ -103,6 +103,8 @@ plugins/<plugin-name>/
 
 - 현재 `plugin-name`, `skill-name`, `SKILL.md` frontmatter의 `name`,
   `.claude-plugin/plugin.json`의 `name`은 동일하게 관리한다.
+- `.claude-plugin/plugin.json`의 `version`은 `1`, `2`, `3`처럼 양의 정수 문자열로 올린다.
+  OpenAI 생성본도 이 값을 그대로 사용하므로 Claude와 OpenAI의 플러그인 버전은 항상 같다.
 - 새 Claude 플러그인은 루트 `.claude-plugin/marketplace.json`의 `plugins` 배열에도 추가한다.
 - main에 push하면 `plugins/*/.claude-plugin/plugin.json`과
   `plugins/*/skills/*/SKILL.md`를 검증해 `openai-marketplace`를 갱신한다.
