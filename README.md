@@ -21,7 +21,7 @@ naria-skills/
 ├── .agents/plugins/
 │   └── marketplace.json          ChatGPT Work/Codex용 마켓플레이스 매니페스트
 ├── plugins/
-│   └── lecture-note-pdf -> skills/lecture-note-pdf/vendors/openai
+│   └── stt2study-note-pdf -> skills/stt2study-note-pdf/vendors/openai
 │                                  Codex 마켓플레이스가 참조하는 OpenAI 플러그인 진입점
 └── skills/
     └── <스킬 이름>/
@@ -70,7 +70,7 @@ naria-skills/
 ## ChatGPT Work / Codex에서 쓰기
 
 ChatGPT Work/Codex는 `.agents/plugins/marketplace.json`을 마켓플레이스 매니페스트로 읽는다.
-`plugins/lecture-note-pdf`는 `skills/lecture-note-pdf/vendors/openai`를 가리키는 심볼릭 링크이며,
+`plugins/stt2study-note-pdf`는 `skills/stt2study-note-pdf/vendors/openai`를 가리키는 심볼릭 링크이며,
 실제 플러그인 매니페스트는 그 안의 `.codex-plugin/plugin.json`에 있다.
 
 로컬에서 이 레포를 마켓플레이스로 추가할 때는 레포 루트를 대상으로 한다.
@@ -80,7 +80,7 @@ codex plugin marketplace add .
 ```
 
 GitHub에서 설치할 때의 정확한 URL 문법은 사용하는 Codex 클라이언트의 Marketplace 추가 화면이나
-현재 버전의 안내를 따른다. 설치 뒤에는 `lecture-note-pdf` 플러그인을 선택하면 된다.
+현재 버전의 안내를 따른다. 설치 뒤에는 `stt2study-note-pdf` 플러그인을 선택하면 된다.
 
 ## 라이선스
 

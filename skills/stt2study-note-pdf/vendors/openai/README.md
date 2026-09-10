@@ -1,7 +1,7 @@
 # 강의 노트 PDF 생성 (OpenAI / Codex)
 
 이 폴더는 ChatGPT Work/Codex용 플러그인 루트다. 실제 스킬 지침은
-[`skills/lecture-note-pdf/SKILL.md`](skills/lecture-note-pdf/SKILL.md)에 있다.
+[`skills/stt2study-note-pdf/SKILL.md`](skills/stt2study-note-pdf/SKILL.md)에 있다.
 
 공통 원칙·스크립트·참고 문서는 스킬 루트의 원본을 심볼릭 링크로 공유한다.
 따라서 OpenAI 실행 방식만 바꿀 때는 이 폴더의 `.codex-plugin/`과 `skills/`만 수정한다.
@@ -11,7 +11,7 @@
 ```
 vendors/openai/
 ├── .codex-plugin/plugin.json    Codex 플러그인 매니페스트
-├── skills/lecture-note-pdf/
+├── skills/stt2study-note-pdf/
 │   ├── SKILL.md                 Codex 오케스트레이션 지침
 │   ├── PRINCIPLES.md -> ../../../../PRINCIPLES.md
 │   ├── scripts/ -> ../../../../scripts
@@ -31,4 +31,4 @@ vendors/openai/
 
 `dayNN/cross.jsonl`은 병렬 작업이 동시에 접근할 수 있으므로 반드시
 `scripts/append_cross.py`를 통해서만 추가한다. 세부 프롬프트와 단계별 제약은
-[`skills/lecture-note-pdf/SKILL.md`](skills/lecture-note-pdf/SKILL.md)를 따른다.
+[`skills/stt2study-note-pdf/SKILL.md`](skills/stt2study-note-pdf/SKILL.md)를 따른다.

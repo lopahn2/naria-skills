@@ -5,10 +5,10 @@
   },
   "plugins": [
     {
-      "name": "lecture-note-pdf",
+      "name": "stt2study-note-pdf",
       "source": {
         "source": "local",
-        "path": "./plugins/lecture-note-pdf"
+        "path": "./plugins/stt2study-note-pdf"
       },
       "policy": {
         "installation": "AVAILABLE",
