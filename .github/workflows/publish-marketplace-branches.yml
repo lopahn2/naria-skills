@@ -1,0 +1,53 @@
+name: Publish marketplace branches
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - "skills/**"
+      - "tools/build_marketplace_branch.py"
+      - ".github/workflows/publish-marketplace-branches.yml"
+  workflow_dispatch: {}
+
+permissions:
+  contents: write
+
+jobs:
+  publish:
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        provider: [openai, claude]
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Build marketplace branch
+        env:
+          PROVIDER: ${{ matrix.provider }}
+        run: |
+          set -euo pipefail
+          branch="${PROVIDER}-marketplace"
+          git fetch origin "$branch" || true
+          if git show-ref --verify --quiet "refs/remotes/origin/$branch"; then
+            git worktree add "../$branch" "origin/$branch"
+          else
+            git worktree add --detach "../$branch"
+            git -C "../$branch" switch --orphan "$branch"
+          fi
+
+          python3 tools/build_marketplace_branch.py \
+            --provider "$PROVIDER" \
+            --output "../$branch" \
+            --source-sha "$GITHUB_SHA" \
+            --repository "$GITHUB_REPOSITORY"
+
+          git -C "../$branch" add --all
+          if git -C "../$branch" diff --cached --quiet; then
+            exit 0
+          fi
+          git -C "../$branch" config user.name "github-actions[bot]"
+          git -C "../$branch" config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git -C "../$branch" commit -m "chore: publish $PROVIDER marketplace from ${GITHUB_SHA::12}"
+          git -C "../$branch" push origin "HEAD:refs/heads/$branch"
