@@ -1,7 +1,7 @@
 {
   "sourceRepository": "lopahn2/naria-skills",
   "sourceBranch": "main",
-  "sourceCommit": "cac4fccae1fb41442d7fcb48484ff62fb064102a",
+  "sourceCommit": "f49d58abe730957b36f3a9cd8ad28ae8b94caa77",
   "provider": "openai",
   "plugins": [
     "stt2study-note-pdf"
