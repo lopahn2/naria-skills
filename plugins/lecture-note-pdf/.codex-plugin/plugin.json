@@ -1,0 +1,40 @@
+{
+  "name": "lecture-note-pdf",
+  "version": "0.6.0+codex.20260910015229",
+  "description": "\uac15\uc758 \ub179\ucde8\ub85d\uacfc \uad50\uc7ac PDF\ub85c \ub2e4\uc774\uc5b4\uadf8\ub7a8 \uc911\uc2ec \ud559\uc2b5 \ub178\ud2b8 PDF\ub97c \ub9cc\ub4e0\ub2e4. \uad50\uc2dc \ubd84\uc11d\uacfc \ud30c\ud2b8 \uc791\uc131\uc744 Codex \uc11c\ube0c\uc5d0\uc774\uc804\ud2b8\uc5d0 \uc704\uc784\ud558\uace0, \uba54\uc778\uc740 \ubaa9\ucc28\u00b7\uc5f0\uacb0 \uc124\uacc4\u00b7\uc870\ub9bd\u00b7\uac80\uc99d\uc744 \ub9e1\ub294\ub2e4.",
+  "author": {
+    "name": "yhpahn",
+    "url": "https://github.com/lopahn2"
+  },
+  "homepage": "https://github.com/lopahn2/naria-skills/tree/main/skills/lecture-note-pdf",
+  "repository": "https://github.com/lopahn2/naria-skills",
+  "license": "MIT",
+  "keywords": [
+    "lecture",
+    "transcript",
+    "pdf",
+    "study-notes",
+    "korean",
+    "subagents"
+  ],
+  "skills": "./skills/",
+  "interface": {
+    "displayName": "Lecture Note PDF",
+    "shortDescription": "\ub179\ucde8\uc640 \uad50\uc7ac\ub97c \ub2e4\uc774\uc5b4\uadf8\ub7a8 \uc911\uc2ec \ud559\uc2b5 \ub178\ud2b8 PDF\ub85c \ub9cc\ub4ed\ub2c8\ub2e4.",
+    "longDescription": "\uad50\uc2dc\ubcc4 \ub179\ucde8\ub97c \uad6c\uc870\ud654\ud558\uace0 \uad50\uc2dc \uac04 \uc5f0\uacb0\uc744 \uc124\uacc4\ud574, \uc77d\uace0 \uc774\ud574\ud558\ub294 \ud55c\uad6d\uc5b4 \ud559\uc2b5 \ub178\ud2b8 PDF\ub97c \uc0dd\uc131\ud569\ub2c8\ub2e4.",
+    "developerName": "naria",
+    "category": "Productivity",
+    "capabilities": [
+      "Write",
+      "Subagents",
+      "PDF"
+    ],
+    "websiteURL": "https://github.com/lopahn2/naria-skills",
+    "defaultPrompt": [
+      "\uac15\uc758 \ub179\ucde8\uc640 \uad50\uc7ac PDF\ub85c \ud559\uc2b5 \ub178\ud2b8\ub97c \ub9cc\ub4e4\uc5b4\uc918.",
+      "day01\uc758 \uad50\uc2dc\ubcc4 \ub178\ud2b8\ub97c \ub9cc\ub4e4\uace0 \ud1b5\ud569 PDF\uae4c\uc9c0 \uac80\uc99d\ud574\uc918.",
+      "\uae30\uc874 \uac15\uc758 \ub178\ud2b8\uc758 \ud2b9\uc815 \uad50\uc2dc\ub9cc \ub2e4\uc2dc \uad6c\uc870\ud654\ud574\uc918."
+    ],
+    "brandColor": "#2563EB"
+  }
+}

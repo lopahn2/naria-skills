@@ -18,6 +18,11 @@ naria-skills/
 ├── LICENSE
 ├── .claude-plugin/
 │   └── marketplace.json          Claude Code/Cowork용 마켓플레이스 매니페스트
+├── .agents/plugins/
+│   └── marketplace.json          ChatGPT Work/Codex용 마켓플레이스 매니페스트
+├── plugins/
+│   └── lecture-note-pdf -> skills/lecture-note-pdf/vendors/openai
+│                                  Codex 마켓플레이스가 참조하는 OpenAI 플러그인 진입점
 └── skills/
     └── <스킬 이름>/
         ├── README.md              그 스킬의 개요 + 벤더별 안내
@@ -61,6 +66,21 @@ naria-skills/
 스킬마다 `vendors/` 아래에 해당 도구용 폴더가 있으면 그걸 읽는다. 없으면
 (아직 TODO거나 애초에 그 스킬이 멀티벤더를 지원하지 않으면) 그 스킬의
 `README.md`를 참고해 직접 방법을 채운다.
+
+## ChatGPT Work / Codex에서 쓰기
+
+ChatGPT Work/Codex는 `.agents/plugins/marketplace.json`을 마켓플레이스 매니페스트로 읽는다.
+`plugins/lecture-note-pdf`는 `skills/lecture-note-pdf/vendors/openai`를 가리키는 심볼릭 링크이며,
+실제 플러그인 매니페스트는 그 안의 `.codex-plugin/plugin.json`에 있다.
+
+로컬에서 이 레포를 마켓플레이스로 추가할 때는 레포 루트를 대상으로 한다.
+
+```bash
+codex plugin marketplace add .
+```
+
+GitHub에서 설치할 때의 정확한 URL 문법은 사용하는 Codex 클라이언트의 Marketplace 추가 화면이나
+현재 버전의 안내를 따른다. 설치 뒤에는 `lecture-note-pdf` 플러그인을 선택하면 된다.
 
 ## 라이선스
 
