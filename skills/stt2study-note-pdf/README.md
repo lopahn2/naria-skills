@@ -1,4 +1,4 @@
-# lecture-note-pdf
+# stt2study-note-pdf
 
 강의 녹취록(STT)과 교재 PDF로 **다이어그램 중심 학습 노트 PDF**를 만드는 스킬.
 
@@ -73,7 +73,7 @@ dayNN/
 ## 구성
 
 ```
-lecture-note-pdf/
+stt2study-note-pdf/
 ├── README.md                     이 파일
 ├── PRINCIPLES.md                 벤더 중립 원칙 — 모든 도구가 공통으로 따르는 방법론
 ├── scripts/                      벤더 무관 파이썬 스크립트
@@ -98,7 +98,7 @@ lecture-note-pdf/
     ├── claude/                   Claude Code 플러그인 형식
     │   ├── .claude-plugin/plugin.json
     │   ├── agents/lecture-chapter-analyst.md, lecture-part-writer.md
-    │   └── skills/lecture-note-pdf/SKILL.md (+ scripts·references·assets·PRINCIPLES.md 심볼릭 링크)
+    │   └── skills/stt2study-note-pdf/SKILL.md (+ scripts·references·assets·PRINCIPLES.md 심볼릭 링크)
     ├── openai/                   TODO — GPT 계열 모델이 채움
     └── generic/PROMPT.md         서브에이전트 없는 도구용 순차 실행판
 ```

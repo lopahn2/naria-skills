@@ -2,7 +2,7 @@
 name: lecture-part-writer
 description: |
   이미 만들어진 교시 구조화 노트 2~3개를 받아, 통합본의 한 파트(HTML)를
-  작성하는 전담 에이전트. lecture-note-pdf 스킬의 reduce 단계에서 파트마다
+  작성하는 전담 에이전트. stt2study-note-pdf 스킬의 reduce 단계에서 파트마다
   하나씩 병렬로 띄운다. 원문 녹취는 절대 열지 않고, 메인이 cross.jsonl만
   보고 미리 뽑아준 "연결 지도"를 참고해 교차연결 박스를 넣는다.
 

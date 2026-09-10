@@ -1,5 +1,5 @@
 ---
-name: lecture-note-pdf
+name: stt2study-note-pdf
 description: 강의 녹취록(STT)과 교재 PDF로 다이어그램 중심 학습 노트 PDF를 만든다. 교시별 분석을 서브에이전트에 위임하고 통합본은 메인이 작성한다. 인코딩·OCR·교본 매칭·STT 교정 자동 처리. 강의 정리, 교육 노트, 세미나·컨퍼런스 녹취 정리 요청에 사용.
 ---
 
@@ -25,7 +25,7 @@ Agent(
   description: "N교시 녹취 분석",
   prompt: "dayNN/audio/pMM.txt 를 정독해 dayNN/notes/pMM.md 를 만들어라.
            대응 교본: <파일> p.A–B (신뢰도 <높음/낮음/없음>)
-           스펙: ${CLAUDE_PLUGIN_ROOT}/skills/lecture-note-pdf/references/chapter-note-spec.md
+           스펙: ${CLAUDE_PLUGIN_ROOT}/skills/stt2study-note-pdf/references/chapter-note-spec.md
            요약하지 말고 구조화하라. 비유는 원문 인용을 포함하라.
            교차 후보를 반드시 채워라. 다 쓴 뒤 dayNN/cross.jsonl 에
            append_cross.py 로 한 줄 추가하라. 반환은 5줄 이내."
@@ -40,7 +40,7 @@ Agent(
 
 ```bash
 echo '{"chapter":"p05","title":"<주제>","one_line":"<한 문장>","cross":["<개념>: <이유>"]}' \
-  | python3 ${CLAUDE_PLUGIN_ROOT}/skills/lecture-note-pdf/scripts/append_cross.py dayNN
+  | python3 ${CLAUDE_PLUGIN_ROOT}/skills/stt2study-note-pdf/scripts/append_cross.py dayNN
 ```
 
 ## Phase B2 · 파트 작성 (서브에이전트, 병렬)
@@ -87,6 +87,6 @@ cat day0*/cross.jsonl
 
 이 폴더(`vendors/claude/`)에는 Claude Code 플러그인 형식(`.claude-plugin/plugin.json`,
 `agents/*.md`, 이 `SKILL.md`)만 있다. `scripts/`, `references/`, `assets/`,
-`PRINCIPLES.md`는 이 벤더 전용 사본이 아니라 스킬 루트(`skills/lecture-note-pdf/`)를
+`PRINCIPLES.md`는 이 벤더 전용 사본이 아니라 스킬 루트(`skills/stt2study-note-pdf/`)를
 가리키는 심볼릭 링크다 — 여러 벤더가 같은 스크립트·참고문서·원칙 문서를 공유하기
 위함이니, 내용을 고칠 때는 링크가 아니라 스킬 루트의 원본을 수정할 것.

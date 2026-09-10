@@ -8,7 +8,7 @@ naria가 만든 AI 에이전트 스킬 모음. 벤더 중립을 목표로 한다
 
 | 스킬 | 설명 |
 |---|---|
-| [`lecture-note-pdf`](skills/lecture-note-pdf/) | 강의 녹취록(STT)과 교재 PDF로 다이어그램 중심 학습 노트 PDF 생성 |
+| [`stt2study-note-pdf`](skills/stt2study-note-pdf/) | 강의 녹취록(STT)과 교재 PDF로 다이어그램 중심 학습 노트 PDF 생성 |
 
 ## 구조
 
@@ -49,7 +49,7 @@ naria-skills/
 
 ```
 /plugin marketplace add naria/naria-skills
-/plugin install lecture-note-pdf
+/plugin install stt2study-note-pdf
 ```
 
 (정확한 명령/문법은 사용 중인 Claude Code 버전의 플러그인 문서를 확인할 것 —

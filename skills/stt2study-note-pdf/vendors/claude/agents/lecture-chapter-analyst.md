@@ -2,7 +2,7 @@
 name: lecture-chapter-analyst
 description: |
   강의 녹취 한 교시를 정독해 구조화 노트 파일로 만드는 분석 전담 에이전트.
-  lecture-note-pdf 스킬의 map 단계에서 교시마다 하나씩 병렬로 띄운다.
+  stt2study-note-pdf 스킬의 map 단계에서 교시마다 하나씩 병렬로 띄운다.
   원문을 메인 에이전트 컨텍스트에 올리지 않는 것이 목적이므로,
   반드시 파일로 쓰고 짧은 확인만 반환한다.
 
@@ -65,7 +65,7 @@ tools: ["Read", "Write", "Bash", "Grep"]
    (파일 없으면 생성됨). **직접 쓰지 말고 반드시 스크립트를 거친다**:
    ```bash
    echo '{"chapter":"p05","title":"<주제>","one_line":"<한 문장>","cross":["<개념>: <이유>", "..."]}' \
-     | python3 ${CLAUDE_PLUGIN_ROOT}/skills/lecture-note-pdf/scripts/append_cross.py dayNN
+     | python3 ${CLAUDE_PLUGIN_ROOT}/skills/stt2study-note-pdf/scripts/append_cross.py dayNN
    ```
 6. 짧은 확인만 반환한다.
 
