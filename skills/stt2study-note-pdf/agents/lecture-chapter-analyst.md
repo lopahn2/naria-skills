@@ -65,8 +65,10 @@ tools: ["Read", "Write", "Bash", "Grep"]
    (파일 없으면 생성됨). **직접 쓰지 말고 반드시 스크립트를 거친다**:
    ```bash
    echo '{"chapter":"p05","title":"<주제>","one_line":"<한 문장>","cross":["<개념>: <이유>", "..."]}' \
-     | python3 ${CLAUDE_PLUGIN_ROOT}/skills/stt2study-note-pdf/scripts/append_cross.py dayNN
+     | python3 <스킬 폴더>/scripts/append_cross.py dayNN
    ```
+   (`<스킬 폴더>`는 이 파일이 들어있는 `stt2study-note-pdf/`의 실제 경로 — 메인
+   에이전트가 프롬프트에 절대경로나 상대경로를 명시해서 전달한다.)
 6. 짧은 확인만 반환한다.
 
 ## 출력 스펙

@@ -1,14 +1,22 @@
 ---
 name: stt2study-note-pdf
 description: 강의 녹취록(STT)과 교재 PDF로 다이어그램 중심 학습 노트 PDF를 만든다. 교시별 분석을 서브에이전트에 위임하고 통합본은 메인이 작성한다. 인코딩·OCR·교본 매칭·STT 교정 자동 처리. 강의 정리, 교육 노트, 세미나·컨퍼런스 녹취 정리 요청에 사용.
+use-agent-model: claude-sonnet-5(medium), gpt-5.6-terra(medium)
 ---
 
 # 강의 노트 PDF 생성
 
-**이 파일이 이 스킬의 유일한 원본이다.** Claude Code용과 Codex용 SKILL.md가
-따로 존재하지 않는다 — 아래 각 실행 단계는 환경에 따라 분기하라고 명시돼
-있으니, 지금 자신이 어떤 도구로 실행되고 있는지 먼저 판단하고 해당 분기를
-따른다. (벤더별 패키징 위치는 문서 맨 끝 "벤더별 패키징" 참조.)
+**이 폴더 전체(`stt2study-note-pdf/`)가 이 스킬의 전부다.** 마켓플레이스 등록이나
+플러그인 설치 없이, zip 다운로드나 `git clone`만으로 그대로 쓸 수 있게 만들었다 —
+이 폴더를 통째로 복사해 각 도구가 스킬을 읽는 위치(예: Claude Code라면
+`.claude/skills/stt2study-note-pdf/`)에 두면 된다. 위치·설치 방법은 문서 맨 끝
+"이 폴더를 그대로 쓴다" 참조.
+
+**서브에이전트를 부를 때 쓸 모델은 위 frontmatter의 `use-agent-model`에 명시돼
+있다** — Claude Code면 `claude-sonnet-5`, Codex/ChatGPT Work면 `gpt-5.6-terra`,
+둘 다 reasoning effort는 medium이다. 실행 환경이 이 중 어느 쪽도 아니거나 지정된
+모델을 쓸 수 없으면, 임의로 다른 모델을 골라 조용히 진행하지 말고 반드시 사용자에게
+먼저 확인받는다.
 
 **먼저 `PRINCIPLES.md`를 읽어라.** 4대 원칙, 아키텍처, Phase 0~D의 판단
 기준(등급, 매칭 임계값, 분량 기준, 사용자에게 확인할 것)이 전부 거기 있다.
@@ -19,7 +27,9 @@ description: 강의 녹취록(STT)과 교재 PDF로 다이어그램 중심 학�
 
 - **Claude Code / Cowork**라면 → 각 Phase의 "Claude Code" 분기를 따른다.
 - **OpenAI Codex / ChatGPT Work**라면 → 각 Phase의 "Codex" 분기를 따른다.
-- **둘 다 아니거나 판단이 애매하면** → 임의로 아무 분기나 적당히 따르지
+- **서브에이전트 위임 자체를 지원하지 않는 도구**라면 → `generic-usage.md`를
+  따른다(순차 실행판, 원칙은 동일).
+- **셋 다 아니거나 판단이 애매하면** → 임의로 아무 분기나 적당히 따르지
   말고, 서브에이전트를 어떻게 호출해야 하는지(가능 여부, 모델 선택 가능
   여부) 사용자에게 먼저 확인받은 뒤 진행한다. 애매한 채로 진행해서 나중에
   "그럴듯하지만 틀린" 설명을 지어내는 것이 가장 나쁜 실패다.
@@ -37,24 +47,31 @@ description: 강의 녹취록(STT)과 교재 PDF로 다이어그램 중심 학�
 
 ### Claude Code일 때
 
+이 스킬 폴더에는 이 역할에 맞춰 쓴 서브에이전트 페르소나가
+`agents/lecture-chapter-analyst.md`에 있다 — 이 폴더가 Claude Code 플러그인으로
+설치돼 있지 않은 한(즉 `stt2study-note-pdf:lecture-chapter-analyst`라는
+subagent_type이 따로 등록돼 있지 않은 한), 이 파일을 직접 Read로 읽어
+그 내용을 `general-purpose` 서브에이전트 프롬프트에 그대로 포함시켜 호출한다.
+
 ```
 Agent(
-  subagent_type: "lecture-chapter-analyst",
-  model: "sonnet",
+  subagent_type: "general-purpose",   # 위 이름으로 별도 등록돼 있으면 그걸 우선 사용
+  model: "claude-sonnet-5",
   description: "N교시 녹취 분석",
-  prompt: "<위 공통 지시>
-           스펙 경로: ${CLAUDE_PLUGIN_ROOT}/skills/stt2study-note-pdf/references/chapter-note-spec.md"
+  prompt: "<agents/lecture-chapter-analyst.md 의 '절대 규칙'부터 '출력 스펙'까지 전문>
+
+           <위 공통 지시>
+           스펙 경로: references/chapter-note-spec.md"
 )
 ```
 
-`lecture-chapter-analyst` 에이전트가 없으면 `general-purpose`에 스펙 경로를
-주고 같은 지시를 내린다. 어느 쪽이든 **`model: "sonnet"`을 명시**한다.
+어느 쪽이든 **모델은 `claude-sonnet-5`를 명시**한다(reasoning effort: medium).
 
 ### Codex일 때
 
 `collaboration.spawn_agent`(또는 그에 준하는 서브에이전트 생성 기능)를 쓸 수
-있는 환경에서는 교시마다 독립 에이전트로 위임하고, **model은
-`gpt-5.6-terra`를 우선 사용한다.** 런타임이 특정 모델 선택을 지원하지
+있는 환경에서는 교시마다 독립 에이전트로 위임하고, **model은 `gpt-5.6-terra`를
+우선 사용한다** (reasoning effort: medium). 런타임이 특정 모델 선택을 지원하지
 않으면, 임의로 다른 모델을 쓰지 말고 반드시 사용자에게 확인 후 서브에이전트를
 생성한다. 위 공통 지시를 그대로 전달한다.
 
@@ -98,20 +115,22 @@ echo '{"chapter":"p05","title":"<주제>","one_line":"<한 문장>","cross":["<�
 
 ### Claude Code일 때
 
+`agents/lecture-part-writer.md`를 Read로 읽어 그 내용을 프롬프트에 포함시킨다
+(Phase A와 같은 이유 — 별도 subagent_type으로 등록돼 있지 않을 수 있다).
+
 ```
 Agent(
-  subagent_type: "lecture-part-writer",
-  model: "sonnet",
+  subagent_type: "general-purpose",
+  model: "claude-sonnet-5",
   description: "N파트(2장~4장) 작성",
-  prompt: "<위 공통 지시>
+  prompt: "<agents/lecture-part-writer.md 전문>
+
+           <위 공통 지시>
            dayNN/notes/p04.md, dayNN/notes/p05.md 를 읽고,
            <outline.md에서 이 파트가 담당할 장들의 항목만 그대로 붙여넣기>
            연결 지도: <B1에서 이 파트와 관련된 항목만 추려서 전달>"
 )
 ```
-
-`lecture-part-writer` 에이전트가 없으면 `general-purpose`에 스펙 경로를
-주고 같은 지시를 내린다. 어느 쪽이든 **`model: "sonnet"`을 명시**한다.
 
 ### Codex일 때
 
@@ -143,18 +162,32 @@ cat day0*/cross.jsonl
 5일차를 돌릴 때 1~4일차 원문을 다시 읽지 않는 것이 토큰 절감의 최대
 지점이다. 용어집은 누적하되 이미 등록된 항목은 다시 쓰지 않는다.
 
-## 벤더별 패키징
+## 이 폴더를 그대로 쓴다
 
-이 파일(`skills/stt2study-note-pdf/SKILL.md`)과 `PRINCIPLES.md`·`scripts/`·
-`references/`·`assets/`가 이 스킬의 유일한 원본이다. 마켓플레이스 패키징은
-이 원본을 그대로 노출할 뿐 별도 사본을 두지 않는다:
+이 스킬은 마켓플레이스·플러그인 형식에 얽매이지 않는다. `stt2study-note-pdf/`
+폴더 하나가 원본이자 배포 단위다:
 
-- **Claude Code** (`.claude-plugin/marketplace.json`) →
-  `marketplace/claude/stt2study-note-pdf/` — 이 폴더 안의 `skills/stt2study-note-pdf/`는
-  이 원본을 가리키는 심볼릭 링크. `agents/*.md`(서브에이전트 정의)만
-  Claude Code 고유 메커니즘이라 여기 실체로 존재한다.
-- **Codex** (`.agents/plugins/marketplace.json`) →
-  `marketplace/codex/stt2study-note-pdf/` — Codex가 심볼릭 링크를 못 읽어서
-  빌드 시 이 원본을 그대로 복사해 넣는다(`tools/build_codex_package.py`,
-  CI가 자동 실행). **이 안의 파일은 손으로 고치지 않는다** — 다음 빌드에서
-  덮어써진다. 내용을 고칠 땐 항상 이 파일(원본)만 고친다.
+```
+stt2study-note-pdf/
+├── SKILL.md              (이 파일)
+├── PRINCIPLES.md          방법론 — 먼저 읽을 것
+├── generic-usage.md       서브에이전트 없는 도구용 순차 실행판
+├── agents/                Claude Code 서브에이전트 페르소나(참고용 프롬프트)
+├── references/            스펙·규칙 문서
+├── scripts/                실행 스크립트
+└── assets/                 렌더 템플릿(CSS 등)
+```
+
+- **zip으로 받았다면**: 압축을 풀어 이 폴더 전체를 그대로 쓴다.
+- **git clone으로 받았다면**: 저장소 안에서 `skills/stt2study-note-pdf/`가 이 폴더다.
+- **Claude Code**: 이 폴더를 `.claude/skills/stt2study-note-pdf/`(프로젝트) 또는
+  사용자 스킬 디렉터리에 복사한다. `agents/*.md`를 Claude Code의 서브에이전트
+  등록 규칙에 맞는 위치에도 함께 두면 `subagent_type`으로 바로 호출할 수 있지만,
+  두지 않아도 위 "Claude Code일 때" 분기처럼 파일 내용을 프롬프트에 포함시켜
+  `general-purpose`로 대체 호출하면 된다 — 필수는 아니다.
+- **Codex / ChatGPT Work, 그 외 서브에이전트 개념이 없는 도구**: 이 폴더를
+  통째로 프로젝트에 두고 `SKILL.md`(또는 서브에이전트가 없다면
+  `generic-usage.md`)부터 읽게 하면 된다.
+
+벤더별로 별도 사본을 만들거나 빌드 스크립트로 동기화할 필요가 없다 — 파일이
+하나뿐이므로 어긋날 것도 없다.

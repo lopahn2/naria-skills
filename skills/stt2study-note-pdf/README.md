@@ -24,23 +24,24 @@ dayNN/
 **[`PRINCIPLES.md`](PRINCIPLES.md)** — 4대 원칙, 아키텍처, Phase 0~D의 판단 기준
 (등급, 매칭 임계값, 분량 기준, 사용자에게 확인할 것)이 전부 여기 있다. 벤더 무관.
 
-## SKILL.md 하나, 벤더는 패키징만 다르다
+## 마켓플레이스 없이, 폴더 하나로 쓴다
 
-이 스킬은 **`SKILL.md` 원본이 하나뿐이다.** Claude Code용/Codex용 지침이 서로
-다른 파일로 따로 존재하지 않는다 — `SKILL.md` 안에서 "지금 어떤 환경인지"를
-판별해 그 분기를 따르도록 지시돼 있다 (모델 지정처럼 벤더별로 다른 값이 필요한
-부분만 분기, 나머지는 공통).
+이 스킬은 이 폴더(`stt2study-note-pdf/`) 하나가 전부다. Claude Code용/Codex용
+플러그인 패키징이나 벤더별 사본을 따로 두지 않는다 — zip으로 받든 `git clone`으로
+받든, 이 폴더를 통째로 복사해 각 도구가 스킬을 읽는 위치에 두면 그대로 쓸 수 있다.
 
-| 마켓플레이스 | 패키징 위치 |
+`SKILL.md` 안에서 "지금 어떤 환경인지"를 판별해 그 분기를 따르도록 지시돼 있다
+(모델 지정처럼 벤더별로 다른 값이 필요한 부분만 분기, 나머지는 공통). 서브에이전트
+모델 지정은 `SKILL.md` frontmatter의 `use-agent-model`에 실제 모델명으로 적혀 있다.
+
+| 환경 | 방법 |
 |---|---|
-| Claude Code / Cowork | [`../../marketplace/claude/stt2study-note-pdf/`](../../marketplace/claude/stt2study-note-pdf/) — 이 스킬 원본을 심볼릭 링크로 참조, `agents/*.md`(Task 서브에이전트 정의)만 실체로 존재 |
-| Codex / ChatGPT Work | [`../../marketplace/codex/stt2study-note-pdf/`](../../marketplace/codex/stt2study-note-pdf/) — 심볼릭 링크 불가라 빌드 시 원본을 그대로 복사(`tools/build_codex_package.py`, CI 자동 실행). **여기는 손으로 고치지 않는다** |
-| 서브에이전트를 지원하지 않는 도구 | [`generic-usage.md`](generic-usage.md) — 마켓플레이스에 올리지 않는 순수 참고 문서, 한 세션이 순차로 수행 |
+| Claude Code / Cowork | 이 폴더를 `.claude/skills/stt2study-note-pdf/`(프로젝트) 또는 사용자 스킬 디렉터리에 복사. `agents/*.md`는 Claude Code 서브에이전트 정의 형식(frontmatter에 `model`, `reasoning_effort`)으로 쓰여 있어 그대로 등록해도 되고, 등록 없이 `SKILL.md`가 지시하는 대로 내용만 프롬프트에 포함시켜 호출해도 된다 |
+| Codex / ChatGPT Work | 이 폴더를 프로젝트에 두고 `SKILL.md`부터 읽게 한다 |
+| 서브에이전트를 지원하지 않는 도구 | [`generic-usage.md`](generic-usage.md) — 한 세션이 순차로 수행하는 버전 |
 
-**내용을 고칠 땐 항상 이 스킬 원본(`SKILL.md`, `PRINCIPLES.md`, `scripts/`,
-`references/`, `assets/`)만 고친다.** `marketplace/claude/`는 심볼릭 링크라
-원본을 고치면 자동으로 따라오고, `marketplace/codex/`는 CI가 push마다 원본과
-다시 맞춘다 — 두 곳 다 직접 편집 대상이 아니다.
+**내용을 고칠 땐 이 폴더 안(`SKILL.md`, `PRINCIPLES.md`, `agents/`, `scripts/`,
+`references/`, `assets/`)만 고치면 된다.** 동기화해야 할 별도 사본이 없다.
 
 ## 자동으로 처리되는 것
 
@@ -74,7 +75,10 @@ dayNN/
 ```
 stt2study-note-pdf/
 ├── README.md                     이 파일
+├── SKILL.md                      실행 지침 — Claude/Codex 분기 + use-agent-model 포함
 ├── PRINCIPLES.md                 벤더 중립 원칙 — 모든 도구가 공통으로 따르는 방법론
+├── generic-usage.md              서브에이전트 없는 도구용 순차 실행판
+├── agents/                       Claude Code 서브에이전트 페르소나(lecture-chapter-analyst.md, lecture-part-writer.md)
 ├── scripts/                      벤더 무관 파이썬 스크립트
 │   ├── prep.py                   폰트 체크 + 인코딩 정규화 + 인덱싱 + 등급 판정
 │   ├── idx_summary.py            페이지별 "한 줄 요약" 룩업 jsonl 생성
@@ -90,16 +94,10 @@ stt2study-note-pdf/
 │   ├── stt-corrections.md        누적 교정 사전
 │   ├── document-structure.md     문서 구성 · 박스 사용법 · 분량 기준
 │   └── okf-spec.md               OKF 변환 규칙 · type 목록 · 프로젝트 이름 규칙
-├── assets/
-│   ├── template.css              A4 인쇄 CSS (한글)
-│   └── pipeline-diagram.html     전체 아키텍처 다이어그램
-├── SKILL.md                      실행 지침 — Claude/Codex 분기 포함한 유일한 원본
-└── generic-usage.md              서브에이전트 없는 도구용 순차 실행판 (마켓플레이스 패키징 아님)
+└── assets/
+    ├── template.css              A4 인쇄 CSS (한글)
+    └── pipeline-diagram.html     전체 아키텍처 다이어그램
 ```
-
-마켓플레이스 패키징(`marketplace/claude/stt2study-note-pdf/`,
-`marketplace/codex/stt2study-note-pdf/`)은 이 폴더 밖, 레포 루트의 `marketplace/`
-아래에 있다 — 구조는 루트 [`README.md`](../../README.md) 참조.
 
 `references/stt-corrections.md`는 회차가 쌓일수록 누적된다. 새 변이형을 발견하면
 그 파일에 추가한다.

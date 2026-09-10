@@ -1,7 +1,7 @@
 # 강의 노트 PDF 생성 (서브에이전트 없는 도구용)
 
 서브에이전트/병렬 위임을 지원하지 않는 도구(단일 세션만 가능)에서 쓰는 순차 실행판이다.
-원칙은 [`../../PRINCIPLES.md`](../../PRINCIPLES.md)와 동일 — 다른 건 Phase A/B2를
+원칙은 [`PRINCIPLES.md`](PRINCIPLES.md)와 동일 — 다른 건 Phase A/B2를
 **위임하지 않고 한 세션이 순서대로 직접 수행**한다는 것뿐이다.
 
 컨텍스트 절약 원칙은 서브에이전트가 없어도 그대로 지킨다:
@@ -9,19 +9,14 @@
 Phase B에서 통합본을 쓸 때 노트만 참조하고 원문으로 돌아가지 않으면, 8교시치 원문이
 동시에 컨텍스트에 남아있는 것보다 훨씬 가볍다.
 
-> **이 폴더(`vendors/generic/`)만 고칠 것.** `../claude/`, `../openai/`는 다른
-> 벤더용이니 참고는 해도 내용을 바꾸지 않는다. 공통 방법론(`../../PRINCIPLES.md`,
-> `../../scripts/`, `../../references/`)을 고칠 땐 다른 벤더의 실행 방식과
-> 어긋나지 않는지 확인하고, 애매하면 사용자에게 먼저 묻는다.
-
 ## 실행 순서
 
 ### Phase 0 · 전처리
 
 ```bash
-python3 ../../scripts/prep.py dayNN
-python3 ../../scripts/idx_summary.py dayNN
-python3 ../../scripts/match.py dayNN
+python3 scripts/prep.py dayNN
+python3 scripts/idx_summary.py dayNN
+python3 scripts/match.py dayNN
 ```
 
 `PRINCIPLES.md`의 등급(A/B/C)·매칭 임계값(70%/30%) 판정 기준을 그대로 적용한다.
@@ -33,12 +28,12 @@ python3 ../../scripts/match.py dayNN
 
 1. `dayNN/audio/pMM.txt` 전문을 읽는다 (앞부분만 보고 추론하지 않는다).
 2. 대응 교본 페이지가 있으면 그 구간을 확인하고, 이미지 위주 페이지는 직접 렌더해서 본다.
-3. `../../references/chapter-note-spec.md` 스펙대로 `dayNN/notes/pMM.md`를 쓴다.
+3. `references/chapter-note-spec.md` 스펙대로 `dayNN/notes/pMM.md`를 쓴다.
    **요약하지 말고 구조화한다** — 비유는 원문 인용 포함, 교차 후보를 반드시 채운다.
 4. 아래로 `dayNN/cross.jsonl`에 한 줄 추가한다:
    ```bash
    echo '{"chapter":"p05","title":"<주제>","one_line":"<한 문장>","cross":["<개념>: <이유>"]}' \
-     | python3 ../../scripts/append_cross.py dayNN
+     | python3 scripts/append_cross.py dayNN
    ```
 5. **이 교시의 노트를 다 쓰고 나면, 이 교시의 원문(`audio/pMM.txt`)은 이후 단계에서
    다시 열지 않는다.** 다음 교시로 넘어간다.
@@ -65,8 +60,8 @@ python3 ../../scripts/match.py dayNN
 ### Phase C · 렌더와 검증
 
 ```bash
-python3 ../../scripts/build.py out/dayNN.pdf part1.html part2.html part3.html
-python3 ../../scripts/verify.py out/dayNN.pdf
+python3 scripts/build.py out/dayNN.pdf part1.html part2.html part3.html
+python3 scripts/verify.py out/dayNN.pdf
 ```
 
 `verify.py`가 만든 컨택트 시트를 반드시 눈으로 확인한다(한글 깨짐, 도해 겹침, 빈 페이지 등).
@@ -74,7 +69,7 @@ python3 ../../scripts/verify.py out/dayNN.pdf
 ### Phase D · OKF 변환 (선택)
 
 ```bash
-python3 ../../scripts/build_okf.py <project> dayNN
+python3 scripts/build_okf.py <project> dayNN
 ```
 
 `<project>` 이름은 묻지 않고 임의로 짓지 않는다.

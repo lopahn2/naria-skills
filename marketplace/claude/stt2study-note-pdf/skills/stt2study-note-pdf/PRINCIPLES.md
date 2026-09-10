@@ -1,1 +1,0 @@
-../../../../../skills/stt2study-note-pdf/PRINCIPLES.md
