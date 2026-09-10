@@ -13,7 +13,7 @@ naria가 만든 AI 에이전트 스킬 모음이다. **사람이 수정하는 ca
 
 OpenAI와 Claude 브랜치는 자동 생성된 배포 산출물이다. 직접 수정하지 않는다.
 `main`에 스킬 원본을 변경하면 GitHub Actions가 두 브랜치를 실제 파일 복사본으로 다시
-만들고, 각 브랜치의 `SOURCE.json`에 생성 기준 main 커밋 SHA를 남긴다.
+만들고, 각 브랜치의 `SOURCE.json`에 생성 기준 main 커밋 SHA와 포함된 스킬 목록을 남긴다.
 
 ## 스킬 목록
 
@@ -46,9 +46,28 @@ codex plugin add stt2study-note-pdf@naria-skills
 `stt2study-note-pdf` 플러그인을 설치한다. 사용하는 Claude Code 버전의
 Marketplace UI/CLI에서 source ref를 `claude-marketplace`로 지정한다.
 
+## 새 스킬 추가
+
+새 스킬 폴더마다 아래 세 파일·구조를 만든다.
+
+```text
+skills/<skill-name>/
+├── SKILL.md
+├── marketplace.json
+└── ... 스킬의 나머지 파일
+```
+
+- `SKILL.md` frontmatter의 `name`은 폴더 이름과 같아야 하며, `description`은
+  두 마켓플레이스의 기본 설명으로 사용된다.
+- `marketplace.json`은 플랫폼별 표시 정보만 가진다. OpenAI에는
+  `displayName`, `shortDescription`, `defaultPrompt`를, Claude에는
+  `keywords`를 지정한다.
+- main에 push하면 빌드가 `skills/*/SKILL.md`를 자동 탐색해 두 marketplace
+  브랜치의 플러그인 목록과 실제 파일 복사본을 생성한다.
+
 ## 원본 수정 규칙
 
-- `main/skills/**`만 수정한다.
+- `main/skills/**`와 각 스킬의 `marketplace.json`만 수정한다.
 - `openai-marketplace`, `claude-marketplace`에는 직접 커밋하지 않는다.
 - 배포본은 symlink를 쓰지 않는다. Windows, sparse checkout, Codex 설치 캐시에서도
   안전하도록 실제 파일 복사본으로 생성한다.
