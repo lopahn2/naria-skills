@@ -12,7 +12,7 @@
   "keywords": ["lecture", "transcript", "pdf", "study-notes", "korean", "subagents"],
   "skills": "./skills/",
   "interface": {
-    "displayName": "Lecture Note PDF",
+    "displayName": "Stt2study-note-pdf",
     "shortDescription": "녹취와 교재를 다이어그램 중심 학습 노트 PDF로 만듭니다.",
     "longDescription": "교시별 녹취를 구조화하고 교시 간 연결을 설계해, 읽고 이해하는 한국어 학습 노트 PDF를 생성합니다.",
     "developerName": "naria",
