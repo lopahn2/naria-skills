@@ -45,8 +45,7 @@ def read_frontmatter(skill_md: Path) -> dict[str, str]:
     match = FRONTMATTER.match(contents)
     if match is None:
         raise ValueError(f"{skill_md} must start with YAML frontmatter")
-
-    fields = {item.group("key"): item.group("value").strip().strip(\"'\\\") for item in FRONTMATTER_FIELD.finditer(match.group("body"))}
+    fields = {item.group("key"): item.group("value").strip().strip("'\"") for item in FRONTMATTER_FIELD.finditer(match.group("body"))}
     if not fields.get("name") or not fields.get("description"):
         raise ValueError(f"{skill_md} must define non-empty name and description")
     return fields
