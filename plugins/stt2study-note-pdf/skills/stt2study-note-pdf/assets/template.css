@@ -26,7 +26,7 @@ p, li { orphans: 2; widows: 2; }
 
 .lead { background: #f4f7f9; border-left: 3.5pt solid #0b3d5c; padding: 3mm 4mm;
         margin: 3.5mm 0; font-size: 9.9pt; page-break-inside: avoid; }
-.key  { background: #eef5fa; border: .7pt solid #b9cfdf; border-radius: 3pt;
+.key  { display: block; background: #eef5fa; border: .7pt solid #b9cfdf; border-radius: 3pt;
         padding: 3mm 4mm; margin: 3.5mm 0; font-size: 9.8pt; page-break-inside: avoid; }
 .warn { background: #fff8e6; border-left: 3.5pt solid #d99000; padding: 3mm 4mm;
         margin: 3.5mm 0; font-size: 9.6pt; page-break-inside: avoid; }
@@ -37,9 +37,18 @@ p, li { orphans: 2; widows: 2; }
 .example .ex-label { font-size: 8.2pt; font-weight: 700; color: #3d7a4d;
         letter-spacing: .3px; margin: 0 0 1mm; }
 
-figure { margin: 4mm 0; page-break-inside: avoid; }
+figure { margin: 5mm 0; padding: 2.5mm 3mm 5mm; background: #fff; border: .5pt solid #e0e6eb;
+         page-break-inside: avoid; }
 figure img { max-width: 100%; height: auto; display: block; margin: 0 auto; }
 figcaption { font-size: 8.3pt; color: #666; text-align: center; margin-top: 1.6mm; }
+
+/* 비교 카드는 본문 흐름 안에서만 쓴다. absolute/fixed 위치를 쓰지 않는다. */
+.comparison-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 4mm;
+                   margin: 4.5mm 0; page-break-inside: avoid; }
+.comparison-card { min-height: 25mm; padding: 4mm; background: #f4f8fa; border: .7pt solid #c6d8e3;
+                   border-radius: 3pt; page-break-inside: avoid; }
+.comparison-card strong { display: block; color: #0b3d5c; margin-bottom: 1.2mm; }
+.comparison-card p { margin: 0; }
 
 /* table 전체가 아니라 tr 하나하나에 avoid를 건다. 짧은 표(수치·언급기술 등)는
    어차피 한 페이지에 다 들어가 차이가 없지만, 용어집·STT표처럼 한 페이지보다

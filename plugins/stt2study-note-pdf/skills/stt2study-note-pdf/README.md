@@ -86,6 +86,7 @@ stt2study-note-pdf/
 │   ├── append_cross.py           dayNN/cross.jsonl 에 한 줄 append (동시쓰기 안전)
 │   ├── slide.py                  원본 도해 추출 → base64 (+ diagrams.json 기록)
 │   ├── build.py                  파트 조립 + 치환 + PDF 렌더
+│   ├── audit_layout.py           겹침·화살표 위험 요소 사전 검사
 │   ├── verify.py                 컨택트 시트 + 여백 감지
 │   └── build_okf.py              ②③ → OKF 문서 변환 (okf/dayNN/)
 ├── references/                   벤더 무관 참고문서
