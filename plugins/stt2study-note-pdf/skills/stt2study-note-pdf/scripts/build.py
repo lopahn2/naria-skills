@@ -9,7 +9,7 @@ base64가 본문에 섞이면 이후 편집이 불가능해진다.
 
 파트 파일은 <body> 조각만 담는다. head/style은 이 스크립트가 붙인다.
 """
-import sys, os, json, glob, asyncio, re
+import sys, os, json, glob, asyncio, re, subprocess
 
 args = sys.argv[1:]
 if not args:
@@ -28,6 +28,9 @@ while i < len(args):
 
 if css_path is None:
     css_path = os.path.join(os.path.dirname(__file__), '..', 'assets', 'template.css')
+
+audit = os.path.join(os.path.dirname(__file__), 'audit_layout.py')
+subprocess.run([sys.executable, audit, *parts], check=True)
 
 body = '\n'.join(open(p).read() for p in parts)
 

@@ -55,11 +55,15 @@ python3 scripts/match.py dayNN
 2. `outline.md`에 적힌 장 제목·소제목을 그대로 따라 `partN.html`을 쓴다.
 3. 도해는 `<img src="data:image/png;base64,{{key}}">` 형태로만 남긴다 — `{{key}}`를
    `<img>` 밖에 맨몸으로 쓰지 않는다.
-4. 파트를 다 쓰면 **그 파트 본문을 다시 참조하지 않는다** — 조립은 스크립트가 파일에서 한다.
+4. `.lead`·`.key`·`.warn`·`.example`은 독립 `<div>` 블록으로만 쓴다. 비교 카드는
+   정상 흐름의 grid/flex로 배치하며, 문단 안에 블록 클래스를 넣거나 absolute/fixed 위치로
+   다른 본문을 덮지 않는다.
+5. 파트를 다 쓰면 **그 파트 본문을 다시 참조하지 않는다** — 조립은 스크립트가 파일에서 한다.
 
 ### Phase C · 렌더와 검증
 
 ```bash
+python3 scripts/audit_layout.py part1.html part2.html part3.html
 python3 scripts/build.py out/dayNN.pdf part1.html part2.html part3.html
 python3 scripts/verify.py out/dayNN.pdf
 ```

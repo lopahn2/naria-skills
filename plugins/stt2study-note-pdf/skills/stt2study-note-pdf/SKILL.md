@@ -111,6 +111,14 @@ echo '{"chapter":"p05","title":"<주제>","one_line":"<한 문장>","cross":["<�
 > 전개)가 살아 있어야 한다. 형식은 `references/document-structure.md`의
 > "강사의 실제 예시 박스" 참조.
 >
+> **레이아웃 안전 규칙:** `.lead`·`.key`·`.warn`·`.example`은 반드시 독립된
+> `<div>` 블록으로만 쓴다. 문단 안의 강조는 `<strong>`을 쓰며, `.key`를
+> `<span>` 등에 붙이지 않는다. 비교 카드·라벨은 CSS Grid/Flex의 정상 흐름 안에
+> 배치하고, `position:absolute|fixed`, 음수 margin, transform으로 본문 위에
+> 띄우지 않는다. 인라인 SVG의 화살표는 연결 하나당 `<path>` 하나를 쓰고 화살촉은
+> 대상 카드의 외곽에서 끝낸다. 세부 규칙은 `references/diagram-rules.md`와
+> `references/document-structure.md`를 따른다.
+>
 > 원문 녹취는 열지 마라. 반환은 5줄 이내.
 
 ### Claude Code일 때

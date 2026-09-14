@@ -152,7 +152,10 @@ Phase A가 스스로 정확한 페이지를 다시 찾아낸 사례가 실제로
 `dayNN/outline.md`의 장 구성 기준으로 파트를 나눈다. 파트마다 하나씩, 도구가 지원하면
 병렬로 처리한다. 원문 녹취는 열지 않고, 담당 노트와 (B1이 그 파트에 해당하는 항목만
 추려 준) 연결 지도만 본다. 도해는 `{{key}}` 플레이스홀더로 `<img>` 태그 안에만 남긴다 —
-밖에 맨몸으로 쓰면 base64 텍스트가 그대로 인쇄되는 사고가 난다.
+밖에 맨몸으로 쓰면 base64 텍스트가 그대로 인쇄되는 사고가 난다. 레이아웃 박스는
+독립 `<div>`로만 만들고 문단 안에 `.key` 같은 블록 클래스를 넣지 않는다. 비교 항목은
+정상 문서 흐름의 grid/flex 카드로 놓으며, absolute/fixed 위치·음수 margin·transform으로
+다른 본문을 덮지 않는다.
 
 교시가 3개 이하거나 파트가 1~2개뿐이면 위임하지 않고 메인이 직접 써도 된다.
 이때도 outline.md 작성은 생략하지 않는다.
@@ -165,6 +168,7 @@ Phase A가 스스로 정확한 페이지를 다시 찾아낸 사례가 실제로
 ```bash
 python3 scripts/slide.py 교재.pdf 51 --view                    # 먼저 확인
 python3 scripts/slide.py 교재.pdf 51 S51                       # 도해 추출 — 기본은 crop 없이 페이지 전체
+python3 scripts/audit_layout.py part1.html part2.html part3.html
 python3 scripts/build.py out/dayNN.pdf part1.html part2.html part3.html
 python3 scripts/verify.py out/dayNN.pdf
 ```
@@ -175,7 +179,9 @@ python3 scripts/verify.py out/dayNN.pdf
 `references/diagram-rules.md`의 "크롭 대신 전체 장표를 그대로 가져온다" 참조.
 
 `verify.py`가 만든 컨택트 시트를 **반드시 육안 확인한다.** 한글 깨짐·누락 / SVG 요소
-겹침 / 표가 페이지를 가로지름 / 빈 페이지 / 도해 캡션과 실제 그림 불일치.
+겹침 / 표가 페이지를 가로지름 / 빈 페이지 / 도해 캡션과 실제 그림 불일치. 특히 원본
+슬라이드 이미지의 네 변(하단 포함)에 읽을 만한 여백이 있는지, 비교 카드·라벨이 문단을
+가리지 않는지, 화살표가 대상 카드 외곽에서 끝나고 허공을 향하지 않는지를 확인한다.
 
 **콘텐츠 완결성도 시각 확인과 별개로 반드시 대조한다** (`verify.py`가 아래 두
 항목의 개수를 자동으로 세서 출력한다):

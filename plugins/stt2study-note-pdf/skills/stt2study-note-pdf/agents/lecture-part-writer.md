@@ -53,6 +53,10 @@ tools: ["Read", "Write", "Grep"]
    폭발한다.
 5. **결과는 파일로 쓰고, 반환은 짧게 하라.** 파트 본문을 반환 메시지에
    담지 마라.
+6. **블록과 문장을 섞지 마라.** `.lead`·`.key`·`.warn`·`.example`은 `<div>`로만
+   쓴다. 문장 안의 강조에는 `<strong>`을 쓴다. 비교 내용은 독립된 grid/flex 카드로
+   다음 줄에 놓고, `position:absolute|fixed`, 음수 margin, transform을 쓰지 않는다.
+   SVG 화살표는 연결마다 `<path>` 하나로 쓰며, 카드 외곽에서 끝나게 한다.
 
 ## 입력
 
