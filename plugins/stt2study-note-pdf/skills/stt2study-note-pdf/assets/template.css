@@ -5,7 +5,7 @@
 @page { size: A4; margin: 16mm 15mm 15mm 15mm; }
 * { box-sizing: border-box; }
 
-body { font-family: "Noto Sans CJK KR", sans-serif; font-size: 10.1pt;
+body { font-family: "Noto Sans CJK KR", "Malgun Gothic", sans-serif; font-size: 10.1pt;
        line-height: 1.62; color: #1a1a1a; margin: 0; }
 
 h1 { font-size: 22pt; margin: 0 0 3mm; letter-spacing: -.6px; line-height: 1.22; }
@@ -39,7 +39,9 @@ p, li { orphans: 2; widows: 2; }
 
 figure { margin: 5mm 0; padding: 2.5mm 3mm 5mm; background: #fff; border: .5pt solid #e0e6eb;
          page-break-inside: avoid; }
-figure img { max-width: 100%; height: auto; display: block; margin: 0 auto; }
+/* figure 밖에 실수로 놓인 이미지도 A4 본문 폭을 넘지 않게 한다. 원본 비율은 절대 바꾸지 않는다. */
+img { max-width: 100%; width: auto; height: auto; }
+figure img { display: block; margin: 0 auto; }
 figcaption { font-size: 8.3pt; color: #666; text-align: center; margin-top: 1.6mm; }
 
 /* 비교 카드는 본문 흐름 안에서만 쓴다. absolute/fixed 위치를 쓰지 않는다. */

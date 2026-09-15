@@ -9,14 +9,15 @@
        <day_dir>/idx_<name>.json  페이지 인덱스
        stdout에 교시 목록과 교본 등급
 """
-import sys, os, json, glob, re, subprocess
+import sys, os, json, glob, re, subprocess, shutil
 
 try:
     import chardet, pdfplumber
 except ImportError:
-    subprocess.run([sys.executable, '-m', 'pip', 'install',
-                    'chardet', 'pdfplumber', '--break-system-packages', '-q'], check=True)
-    import chardet, pdfplumber
+    sys.exit('prep.py에는 chardet와 pdfplumber가 필요하다. 자동 설치는 하지 않는다.\n'
+             f'  → {sys.executable} -m pip install chardet pdfplumber\n'
+             '  설치가 제한된 환경이면, 제공 런타임의 해당 패키지를 사용하거나 '
+             '인코딩·PDF 인덱싱을 수동으로 수행한 뒤 계속할 것.')
 
 day = sys.argv[1] if len(sys.argv) > 1 else '.'
 
@@ -27,19 +28,23 @@ day = sys.argv[1] if len(sys.argv) > 1 else '.'
 # 수 있는데, 지금까지는 Phase C 육안 검증에서야 발견됐다 — 그 시점엔
 # 서브에이전트 분석(Phase A)과 파트 작성(Phase B)이 이미 다 끝난 뒤라
 # 비용이 크다. 비용이 큰 단계 전에 여기서 미리 잡는다.
-try:
+if os.name == 'nt':
+    font_dir = os.path.join(os.environ.get('WINDIR', r'C:\\Windows'), 'Fonts')
+    known = ('malgun.ttf', 'malgunbd.ttf', 'NotoSansCJKkr-Regular.otf')
+    if not any(os.path.exists(os.path.join(font_dir, name)) for name in known):
+        sys.exit('Windows 한글 폰트(Malgun Gothic 또는 Noto Sans CJK KR)를 찾지 못했다. '
+                 'PDF 렌더 전에 한글 샘플을 먼저 확인할 것.')
+    print('=== 폰트 ===\n  Windows 한글 폰트 확인됨 (Malgun Gothic/Noto 계열)')
+elif shutil.which('fc-list'):
     out = subprocess.run(['fc-list', ':lang=ko'], capture_output=True, text=True, check=True).stdout
-except FileNotFoundError:
-    sys.exit('fontconfig(fc-list)가 설치되어 있지 않다. '
-             '`apt-get install -y fontconfig fonts-noto-cjk` 후 다시 실행할 것.')
-
-if 'Noto Sans CJK KR' not in out and 'NotoSansCJK' not in out:
-    sys.exit('한글 폰트(Noto Sans CJK KR)가 없다 — 이대로 진행하면 PDF에서 '
-              '한글이 전부 빈 박스로 나온다.\n'
-              '  → `apt-get install -y fonts-noto-cjk` 로 설치 후 다시 실행할 것.\n'
-              '  → (fc-list :lang=ko 로 확인 가능한 한글 폰트가 하나도 없음)')
-
-print(f'=== 폰트 ===\n  한글 폰트 확인됨 (fc-list :lang=ko 결과 {len(out.splitlines())}줄)')
+    if 'Noto Sans CJK KR' not in out and 'NotoSansCJK' not in out:
+        sys.exit('한글 폰트(Noto Sans CJK KR)가 없다 — 이대로 진행하면 PDF에서 '
+                 '한글이 전부 빈 박스로 나온다.\n'
+                 '  → `apt-get install -y fonts-noto-cjk` 로 설치 후 다시 실행할 것.')
+    print(f'=== 폰트 ===\n  한글 폰트 확인됨 (fc-list :lang=ko 결과 {len(out.splitlines())}줄)')
+else:
+    sys.exit('한글 폰트 확인 도구(fc-list)가 없다. 렌더러가 한글 폰트를 제공하는지 '
+             '확인한 뒤 다시 실행할 것.')
 
 # ── 1. 녹취 인코딩 정규화 ────────────────────────────────────────────
 print('=== 녹취 ===')

@@ -41,10 +41,13 @@ for s in range(0, len(ims), per):
     print(f'  {path}   ({s+1}~{min(s+per,len(ims))}쪽)')
 
 # ── 이상 여백 감지 ────────────────────────────────────────────────
-blank = []
+blank, sparse = [], []
 for i, p in enumerate(pages):
     a = np.array(Image.open(p).convert('L'))
+    full_ink = (a < 200).mean()
     ink = (a[int(a.shape[0] * .62):] < 200).mean()
+    if full_ink < 0.006:
+        sparse.append(i + 1)
     if ink < 0.004:
         blank.append(i + 1)
 
@@ -54,6 +57,10 @@ if blank:
     print('  page-break-inside:avoid 가 원인이니 앞 내용을 조절할 것.')
 else:
     print('\n여백 이상 없음')
+
+if sparse:
+    print(f'전체 밀도가 낮은 페이지: {sparse}')
+    print('  → 표지·의도된 장 전환이 아니라면 목차 고립, 강제 줄바꿈, 마지막 빈 페이지를 육안 점검할 것.')
 
 
 # ── 콘텐츠 완결성 대조 (노트 vs 최종본) ──────────────────────────
@@ -77,14 +84,19 @@ if notes and parts:
     approved_diagrams = note_text.count('✅')
     used_images = len(re.findall(r'<img[^>]+src="data:image', part_text))
 
-    # 현장 사례 — "## 현장 사례" 섹션 중 "해당 없음"이 아닌 것만 센다.
+    # 현장 사례 — 섹션 수가 아니라 각 실제 항목을 센다. 한 노트의 여러 사례가
+    # 하나의 .example 박스로 잘못 합쳐지는 누락을 잡기 위한 대조다.
     example_sections = re.findall(
         r'## 현장 사례\n(.*?)(?=\n## |\Z)', note_text, re.S
     )
-    real_examples = sum(
-        1 for sec in example_sections
-        if sec.strip() and '해당 없음' not in sec.strip()[:20]
-    )
+    real_examples = 0
+    for sec in example_sections:
+        stripped = sec.strip()
+        if not stripped or '해당 없음' in stripped[:20]:
+            continue
+        headings = re.findall(r'^###\s+', sec, re.M)
+        bullets = re.findall(r'^[-*]\s+', sec, re.M)
+        real_examples += len(headings) or len(bullets) or 1
     example_boxes = part_text.count('class="example"')
 
     print('\n── 콘텐츠 완결성 대조 ──')
